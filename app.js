@@ -11,6 +11,14 @@ var budgetController = (function () {
     this.value = value;
   };
 
+  var calculateTotal = function (type) {
+    var sum = 0;
+    data.allItems[type].forEach(function (current) {
+      sum += current.value;
+    });
+    data.totals[type] = sum;
+  };
+
   var data = {
     // empty array to save expensive and incomes
     allItems: {
@@ -22,6 +30,10 @@ var budgetController = (function () {
       exp: 0,
       inc: 0,
     },
+    // incomes - expensives
+    budget: 0,
+    // expensives / incomes
+    percentage: 0,
   };
   return {
     addItem: function (type, des, val) {
@@ -44,6 +56,31 @@ var budgetController = (function () {
       // Push and return the new item: type exp it´s the same name that the array of expensives (and the same to incomes)
       data.allItems[type].push(newItem);
       return newItem;
+    },
+
+    calculateBudget: function () {
+      // 1. calculate total incomes and expenses
+      calculateTotal("exp");
+      calculateTotal("inc");
+
+      // 2. calculate the budget (inc - exp)
+      data.budget = data.totals.inc - data.totals.exp;
+
+      // 3. calculate the percentage of incomes that we spent (exp/inc)
+      if (data.totals.inc > 0) {
+        data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+      } else {
+        data.percentage = 1;
+      }
+    },
+
+    getBudget: function () {
+      return {
+        totalIncome: data.totals.inc,
+        totalExpenses: data.totals.exp,
+        budget: data.budget,
+        percentage: data.percentage,
+      };
     },
 
     testing: function () {
@@ -129,8 +166,13 @@ var controller = (function (budgetCtl, UICtl) {
 
   var updateBudget = function () {
     // 1. Calculate the budget
+    budgetController.calculateBudget();
+
     // 2. Return the budget
+    var budget = budgetController.getBudget();
+
     // 2. Display the budget in the UI
+    console.log(budget);
   };
 
   var ctlAddItem = function () {
