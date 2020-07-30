@@ -70,7 +70,7 @@ var UIController = (function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value, // inc or exp
         description: document.querySelector(DOMstrings.inputDescription).value, // item
-        value: document.querySelector(DOMstrings.inputValue).value, // $$
+        value: parseFloat(document.querySelector(DOMstrings.inputValue).value), // $$
       };
     },
     // The same object that we created in the budget controller
@@ -127,11 +127,17 @@ var controller = (function (budgetCtl, UICtl) {
     });
   };
 
+  var updateBudget = function () {
+    // 1. Calculate the budget
+    // 2. Return the budget
+    // 2. Display the budget in the UI
+  };
+
   var ctlAddItem = function () {
     var input, newItem;
     // 1. Get the field input value
     input = UIController.getinput();
-    console.log(input);
+    // console.log(input);
 
     // 2. Add the item to the budget controller
     newItem = budgetController.addItem(
@@ -146,10 +152,10 @@ var controller = (function (budgetCtl, UICtl) {
 
     // 4. Clear the fields
     UIController.clearFields();
-
-    // 5. Calculate the budget
-    // 6. Display the budget in the UI
     // console.log("it works");
+
+    // 5. Calculate and update budget
+    updateBudget();
   };
   return {
     init: function () {
