@@ -140,11 +140,13 @@ var controller = (function (budgetCtl, UICtl) {
     // console.log(input);
 
     // 2. Add the item to the budget controller
-    newItem = budgetController.addItem(
-      input.type,
-      input.description,
-      input.value
-    );
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+      newItem = budgetController.addItem(
+        input.type,
+        input.description,
+        input.value
+      );
+    }
     console.log(newItem);
 
     // 3. Add the item to the UI controller
