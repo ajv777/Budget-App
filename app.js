@@ -94,6 +94,19 @@ var UIController = (function () {
       // Insert the HTML into the DOM (as a last child in the list)
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
+
+    // Clear input field; convert the list in an array and use slice
+    clearFields: function () {
+      var fields, fieldsArray;
+      fields = document.querySelectorAll(
+        DOMstrings.inputDescription + "," + DOMstrings.inputValue
+      );
+      fieldsArray = Array.prototype.slice.call(fields);
+      fieldsArray.forEach(function (current, index, array) {
+        current.value = "";
+      });
+      fieldsArray[0].focus();
+    },
     // To became in public and use it in the Global Controller
     getDOMstrings: function () {
       return DOMstrings;
@@ -130,8 +143,12 @@ var controller = (function (budgetCtl, UICtl) {
 
     // 3. Add the item to the UI controller
     UIController.addListItem(newItem, input.type);
-    // 4. Calculate the budget
-    // 5. Display the budget in the UI
+
+    // 4. Clear the fields
+    UIController.clearFields();
+
+    // 5. Calculate the budget
+    // 6. Display the budget in the UI
     // console.log("it works");
   };
   return {
