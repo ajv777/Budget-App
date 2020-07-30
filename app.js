@@ -1,4 +1,4 @@
-// Budget Controller
+// BUDGET CONTROLLER
 var budgetController = (function () {
   var Expense = function (id, description, value) {
     this.id = id;
@@ -165,6 +165,12 @@ var UIController = (function () {
       fieldsArray[0].focus();
     },
 
+    // Delete item from the DOM
+    deleteListItem: function (selectorID) {
+      var element = document.getElementById(selectorID);
+      element.parentNode.removeChild(document.getElementById(selectorID));
+    },
+
     // Print the budget
     displayBudget: function (obj) {
       document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
@@ -251,10 +257,14 @@ var controller = (function (budgetCtl, UICtl) {
       splitID = itemID.split("-");
       type = splitID[0];
       ID = parseInt(splitID[1]);
-      // 1. Delete from the array
+      // 1. Delete item from the array
       budgetController.deleteItem(type, ID);
+
       // 2. Delete from the ui
+      UIController.deleteListItem(itemID);
+
       // 3. Update and show the new budget
+      updateBudget();
     }
   };
 
