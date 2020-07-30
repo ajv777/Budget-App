@@ -26,3 +26,10 @@
 - Delete the item for the UI
 - Re-calculate the budget
 - Update the UI
+
+## THIRD PART
+
+- Calculate percentages
+- Update percentages in the UI
+- Normal formatting
+- Improve input field UX
