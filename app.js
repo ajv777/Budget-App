@@ -130,8 +130,8 @@ var UIController = (function () {
       }
       // Replace the text
       newHtml = html.replace("%id%", obj.id);
-      newHtml = newHtml.replace("%description", obj.description);
-      newHtml = newHtml.replace("%value", obj.value);
+      newHtml = newHtml.replace("%description%", obj.description);
+      newHtml = newHtml.replace("%value%", obj.value);
 
       // Insert the HTML into the DOM (as a last child in the list)
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
@@ -156,9 +156,15 @@ var UIController = (function () {
       document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
       document.querySelector(DOMstrings.expensesLabel).textContent =
         obj.totalExp;
-      document.querySelector(DOMstrings.percentageLabel).textContent =
-        obj.percentage;
+
+      if (obj.percentage > 0) {
+        document.querySelector(DOMstrings.percentageLabel).textContent =
+          obj.percentage + "%";
+      } else {
+        document.querySelector(DOMstrings.percentageLabel).textContent = "--";
+      }
     },
+
     // To became in public and use it in the Global Controller
     getDOMstrings: function () {
       return DOMstrings;
@@ -217,9 +223,17 @@ var controller = (function (budgetCtl, UICtl) {
     // 5. Calculate and update budget
     updateBudget();
   };
+
   return {
     init: function () {
       console.log("Application has started.");
+      // Reset to 0
+      UIController.displayBudget({
+        totalInc: 0,
+        totalExp: 0,
+        budget: 0,
+        percentage: -1,
+      });
       setupEventListener();
     },
   };
