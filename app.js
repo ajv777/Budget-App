@@ -150,7 +150,7 @@ var UIController = (function () {
     // Delete item
     container: ".container",
     // Print percentages of expenses
-    expensesPerLabel: ".item__percentages",
+    expensesPercLabel: ".item__percentage",
   };
   return {
     getinput: function () {
@@ -172,7 +172,7 @@ var UIController = (function () {
       } else if (type === "exp") {
         element = DOMstrings.expensesContainer;
         html =
-          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i> </button> </div> </div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
       // Replace the text
       newHtml = html.replace("%id%", obj.id);
@@ -219,7 +219,21 @@ var UIController = (function () {
 
     // Print percentages of expenses
     displayPercentages: function (percentages) {
-      var fields = document.querySelectorAll(DOMstrings.expensesPerLabel);
+      var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
+      var nodeListForEach = function (list, callback) {
+        for (var i = 0; i < list.length; i++) {
+          callback(list[i], i);
+        }
+      };
+
+      // This function is the callback in "var nodeListForEach"
+      nodeListForEach(fields, function (current, index) {
+        if (percentages[index] > 0) {
+          current.textContent = percentages[index] + "%";
+        } else {
+          current.textContent = "---";
+        }
+      });
     },
 
     // To became in public and use it in the Global Controller
@@ -264,6 +278,7 @@ var controller = (function (budgetCtl, UICtl) {
     var percentages = budgetController.getPercentages();
     // 3. Update in the UI
     console.log(percentages);
+    UIController.displayPercentages(percentages);
   };
 
   var ctlAddItem = function () {
