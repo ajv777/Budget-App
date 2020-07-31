@@ -4,7 +4,22 @@ var budgetController = (function () {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+  // Prototype chain
+  Expense.prototype.calcPercentage = function (totalIncome) {
+    if (totalIncome > 0) {
+      this.percentage = Math.round((this.value / totalIncome) * 100);
+    } else {
+      this.percentage = -1;
+    }
+  };
+
+  Expense.prototype.getPercentage = function () {
+    return this.percentage;
+  };
+
   var Income = function (id, description, value) {
     this.id = id;
     this.description = description;
@@ -87,6 +102,20 @@ var budgetController = (function () {
       }
     },
 
+    // Calculate and get percentages (using map, return an array with all percentages)
+    calculatePercentages: function () {
+      data.allItems.exp.forEach(function (cur) {
+        cur.calcPercentage(data.totals.inc);
+      });
+    },
+
+    getPercentages: function () {
+      var allPerc = data.allItems.exp.map(function (cur) {
+        return cur.getPercentage();
+      });
+      return allPerc;
+    },
+
     getBudget: function () {
       return {
         totalInc: data.totals.inc,
@@ -120,6 +149,8 @@ var UIController = (function () {
     percentageLabel: ".budget__expenses--percentage",
     // Delete item
     container: ".container",
+    // Print percentages of expenses
+    expensesPerLabel: ".item__percentages",
   };
   return {
     getinput: function () {
@@ -186,6 +217,11 @@ var UIController = (function () {
       }
     },
 
+    // Print percentages of expenses
+    displayPercentages: function (percentages) {
+      var fields = document.querySelectorAll(DOMstrings.expensesPerLabel);
+    },
+
     // To became in public and use it in the Global Controller
     getDOMstrings: function () {
       return DOMstrings;
@@ -193,7 +229,7 @@ var UIController = (function () {
   };
 })();
 
-// Global Controller: pass the other two modules as arguments
+// GLOBAL CONTROLLER: pass the other two modules as arguments
 var controller = (function (budgetCtl, UICtl) {
   var setupEventListener = function () {
     var DOM = UIController.getDOMstrings();
@@ -223,8 +259,11 @@ var controller = (function (budgetCtl, UICtl) {
 
   var updatePercentages = function () {
     // 1. Calculate the percentages
+    budgetController.calculatePercentages();
     // 2. Read percentages for the budget Controller
+    var percentages = budgetController.getPercentages();
     // 3. Update in the UI
+    console.log(percentages);
   };
 
   var ctlAddItem = function () {
