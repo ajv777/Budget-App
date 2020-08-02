@@ -151,6 +151,8 @@ var UIController = (function () {
     container: ".container",
     // Print percentages of expenses
     expensesPercLabel: ".item__percentage",
+    // Date
+    dateLabel: ".budget__title--month",
   };
   // Format numbers (+incomes -expenses with "," and 2 decimals)
   var formatNumber = function (num, type) {
@@ -261,6 +263,30 @@ var UIController = (function () {
       });
     },
 
+    // Date
+    displayMonth: function () {
+      var now, months, month, year;
+      now = new Date();
+      months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      month = now.getMonth();
+      year = now.getFullYear();
+      document.querySelector(DOMstrings.dateLabel).textContent =
+        months[month] + " " + year;
+    },
+
     // To became in public and use it in the Global Controller
     getDOMstrings: function () {
       return DOMstrings;
@@ -363,6 +389,7 @@ var controller = (function (budgetCtl, UICtl) {
     init: function () {
       console.log("Application has started.");
       // Reset to 0
+      UIController.displayMonth();
       UIController.displayBudget({
         totalInc: 0,
         totalExp: 0,
