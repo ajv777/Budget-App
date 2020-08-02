@@ -169,6 +169,11 @@ var UIController = (function () {
     dec = numSplit[1];
     return (type === "exp" ? "-" : "+") + " " + int + "." + dec;
   };
+  var nodeListForEach = function (list, callback) {
+    for (var i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
 
   return {
     getinput: function () {
@@ -247,11 +252,6 @@ var UIController = (function () {
     // Print percentages of expenses
     displayPercentages: function (percentages) {
       var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
-      var nodeListForEach = function (list, callback) {
-        for (var i = 0; i < list.length; i++) {
-          callback(list[i], i);
-        }
-      };
 
       // This function is the callback in "var nodeListForEach"
       nodeListForEach(fields, function (current, index) {
@@ -286,6 +286,20 @@ var UIController = (function () {
       document.querySelector(DOMstrings.dateLabel).textContent =
         months[month] + " " + year;
     },
+    // Change colour expenses / incomes
+    changedType: function () {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputType +
+          "," +
+          DOMstrings.inputDescription +
+          "," +
+          DOMstrings.inputValue
+      );
+      nodeListForEach(fields, function (curr) {
+        curr.classList.toggle("red-focus");
+      });
+      document.querySelector(DOMstrings.inputBtn).classList.toggle("red");
+    },
 
     // To became in public and use it in the Global Controller
     getDOMstrings: function () {
@@ -308,6 +322,9 @@ var controller = (function (budgetCtl, UICtl) {
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctlDeleteItem);
+    document
+      .querySelector(DOM.inputType)
+      .addEventListener("change", UIController.changedType);
   };
 
   var updateBudget = function () {
